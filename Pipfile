@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 discord = "*"
 emoji = "*"
+pynacl = "*"
+ffmpeg = "*"
+discord-py-slash-command = "*"
 
 [dev-packages]
 

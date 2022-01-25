@@ -3,17 +3,23 @@ import os
 from pathlib import Path
 import traceback
 
+import discord
 from discord.ext import commands, tasks
+from discord_slash import SlashCommand
 
 INITIAL_EXTZENSIONS = ["cogs.timer"]
 ICON = "clock_{hour:02}{minute:02}.png"
-# TODO: 時間帯でアイコン画像の変更
+
+
+guilds = [450975581174235136]
 
 
 class Bot(commands.Bot):
-    def __init__(self, command_prefix):
-        super(Bot, self).__init__(command_prefix=command_prefix)
-
+    def __init__(self, command_prefix, intents):
+        super(Bot, self).__init__(
+            command_prefix=command_prefix, case_insensitive=True, intents=intents
+        )
+        slash = SlashCommand(self, sync_commands=True)
         for cog in INITIAL_EXTZENSIONS:
             try:
                 self.load_extension(cog)
@@ -39,6 +45,12 @@ class Bot(commands.Bot):
 
 
 if __name__ == "__main__":
-    bot = Bot(command_prefix="/")
+    intents = discord.Intents.all()
+    intents.typing = False
+    intents.members = False
+    intents.presences = False
+
+    bot = Bot(command_prefix="/", intents=intents)
+    # slash = SlashCommand(bot, override_type=True)
     api_token = os.environ["DISCORD_API_TOKEN"]
     bot.run(api_token)
